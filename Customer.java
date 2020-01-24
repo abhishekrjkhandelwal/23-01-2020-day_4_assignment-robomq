@@ -38,13 +38,18 @@ public class Customer {
 		       conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Customer","root","A889026a");
 		       System.out.println("Connected");
 		       
-		     //STEP 4: Execute a query
-		       System.out.println("Creating database...");
-		       stmt = conn.createStatement();
-		       
 	
-		    //   String sql = "CREATE DATABASE Customer";
-		       //stmt.executeUpdate(sql);
+		   }catch(Exception e)
+		   {
+			   e.printStackTrace();
+		   }
+	   }
+		   
+	    void CustomerTable()
+	    {
+	    	
+	        try
+	        {
 		       System.out.println("Database created successfully...");
 		       
 		   	// just creating query object in JRE 
@@ -63,7 +68,7 @@ public class Customer {
 		   }
     }
 	   
-	public void insert() 
+	public void addCustomer() 
 	{
 	   try
 	   {
@@ -102,20 +107,37 @@ public class Customer {
 	}
 	
 	
-	void update()
+	void editCustomerDetails()
 	{
 	  	
 		try
 		   {
+			//Entering the data 
+			   Scanner sc = new Scanner(System.in);
+			   System.out.println("Enter First Name: \n");
+			   fname = sc.next();
+			   System.out.println("Enter Last Name: \n");
+			   lname = sc.next();
+			   System.out.println("Enter Address: \n");
+			   address = sc.next();
+			   System.out.println("Enter Email: \n");
+			   email = sc.next();
+			  
 			   
 			   stmt = conn.createStatement();
 			   
 		       //Updating data using SQL query
-		       String sql = "UPDATE customers SET fname = ? WHERE customer_id = ?)";
-		       pre.setString(1,"Ghanu");
+		       pre = conn.prepareStatement("UPDATE customers SET fname=?,lname=?,address=?,email=? WHERE customer_id = 3");
+		       pre.setString(1, fname);
+		       pre.setString(2, lname);
+		       pre.setString(3, address);
+		       pre.setString(4, email);
 		       
-		       
-		       pre.executeUpdate(sql);
+		       int n = pre.executeUpdate();
+		       if(n>0)
+		    	   System.out.println("Customer details updated");
+		       else
+		    	   System.out.println("Customer detail is not updated");
 		   } 
 		catch(Exception e)
 		     {
@@ -123,13 +145,13 @@ public class Customer {
 		     }
 	  }
 	
-	void delete()
+	void deleteCustomerDetails()
 	{
 		try
 		{
 		       //Delete data using SQL query
 			pre=conn.prepareStatement("delete from customers where customer_id=?");
-			pre.setInt(2,10);
+			pre.setInt(1,2);
 			
 			int ra=pre.executeUpdate();
 			if(ra>0)
@@ -143,11 +165,14 @@ public class Customer {
 		}	
 		
 	 }
-	void printdata()
+	
+	
+	void printCustomerData()
 	{
 		try
 		{
 		       //Printing data using SQL query
+			stmt = conn.createStatement();
 			String sql = "SELECT * FROM customers";
 		    ResultSet rs = stmt.executeQuery(sql);
 
